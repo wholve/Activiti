@@ -1,9 +1,9 @@
 /* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -54,14 +54,26 @@ public class BoundaryErrorEventTest extends PluggableActivitiTestCase {
     }
   }
 
-  @Deployment
-  public void testCatchErrorOnEmbeddedSubprocessWithEmptyErrorCode() {
-    testCatchErrorOnEmbeddedSubprocess();
+  public void testThrowErrorWithoutErrorCode() {
+    try {
+      repositoryService.createDeployment().addClasspathResource("org/activiti/engine/test/bpmn/event/error/BoundaryErrorEventTest.testThrowErrorWithoutErrorCode.bpmn20.xml").deploy();
+      fail("ActivitiException expected");
+    } catch (ActivitiException re) {
+    }
   }
 
-  @Deployment
-  public void testCatchErrorOnEmbeddedSubprocessWithoutErrorCode() {
+  public void testCatchErrorOnEmbeddedSubprocessWithEmptyErrorCode() {
+    try {
     testCatchErrorOnEmbeddedSubprocess();
+    } catch (ActivitiException re) {
+    }
+  }
+
+  public void testCatchErrorOnEmbeddedSubprocessWithoutErrorCode() {
+    try {
+    testCatchErrorOnEmbeddedSubprocess();
+    } catch (ActivitiException re) {
+    }
   }
 
   @Deployment

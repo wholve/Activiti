@@ -15,6 +15,7 @@ package org.activiti.engine.impl.bpmn.parser.handler;
 import org.activiti.bpmn.model.BaseElement;
 import org.activiti.bpmn.model.CancelEventDefinition;
 import org.activiti.bpmn.model.EndEvent;
+import org.activiti.bpmn.model.Error;
 import org.activiti.bpmn.model.ErrorEventDefinition;
 import org.activiti.bpmn.model.EventDefinition;
 import org.activiti.bpmn.model.TerminateEventDefinition;
@@ -44,10 +45,16 @@ public class EndEventParseHandler extends AbstractActivityBpmnParseHandler<EndEv
 
       if (eventDefinition instanceof ErrorEventDefinition) {
         ErrorEventDefinition errorDefinition = (ErrorEventDefinition) eventDefinition;
-        if (bpmnParse.getBpmnModel().containsErrorRef(errorDefinition.getErrorCode())) {
-          String errorCode = bpmnParse.getBpmnModel().getErrors().get(errorDefinition.getErrorCode());
-          if (StringUtils.isEmpty(errorCode)) {
-            logger.warn("errorCode is required for an error event " + endEvent.getId());
+        if (bpmnParse.getBpmnModel().containsErrorRef(errorDefinition.getErrorRef())) {
+
+          for(Error error : bpmnParse.getBpmnModel().getErrors().values()) {
+            String errorCode = null;
+            if(error.getId().equals(errorDefinition.getErrorRef())){
+              errorCode = error.getErrorCode();
+            }
+            if (StringUtils.isEmpty(errorCode)) {
+              logger.warn("errorCode is required for an error event " + endEvent.getId());
+            }
           }
         }
         endEvent.setBehavior(bpmnParse.getActivityBehaviorFactory().createErrorEndEventActivityBehavior(endEvent, errorDefinition));
